@@ -23,6 +23,12 @@ Int32 treenode_child_count (struct tree_node *node) {
 }
 
 Boolean treenode_append_child (struct tree_node *node, struct tree_node *child) {
+	Boolean ret = false;
+	if (!node || !child)
+		return ret;
+	struct tree_node *insert_point = treenode_get_last_child(node);
+	if (!insert_point)
+		return ret;
 }
 
 Boolean treenode_insert_child (struct tree_node *node, Int32 index, struct tree_node *child) {

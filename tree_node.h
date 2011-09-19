@@ -7,7 +7,7 @@
 
 struct tree_node {
 	TreeElement data;
-	struct tree_node* childs;
+	struct tree_node** childs;
 	struct tree_node* parent;
 	Int32 child_count;
 	UInt32 flag;
