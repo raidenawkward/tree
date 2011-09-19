@@ -24,7 +24,6 @@ struct tree_operations {
 	Int32 (*tree_depth) (struct Tree *tree);
 	void (*traverse) (struct Tree *tree, tree_traverse_t type, Int32 (*visit) (struct tree_node*));
 	struct tree_node* (*root_of_tree) (struct Tree *tree);
-	struct tree_node* (*get_root_from_node) (struct tree_node *node); /// get the top root from node from a tree
 };
 
 #endif // _TREE_H
