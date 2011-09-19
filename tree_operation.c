@@ -3,8 +3,7 @@
 struct tree_operations* tree_get_operation() {
 	struct tree_operations *op = (struct tree_operations*)malloc(sizeof(struct tree_operations));
 	if (!op)
-		return op;
-
+		return NULL;
 	op->create = tree_create;
 	op->destory = tree_destory;
 	op->clear = tree_clear;
@@ -12,14 +11,14 @@ struct tree_operations* tree_get_operation() {
 	op->tree_depth = tree_tree_depth;
 	op->traverse = tree_traverse;
 	op->root_of_tree = tree_root_of_tree;
-
+	
 	return op;
 }
 
 struct tree_node_operations* treenode_get_operation() {
 	struct tree_node_operations *op = (struct tree_node_operations*)malloc(sizeof(struct tree_node_operations));
 	if (!op)
-		return op;
+		return NULL;
 
 	op->get_root = treenode_get_root;
 	op->get_parent = treenode_get_parent;
