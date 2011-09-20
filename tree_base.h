@@ -13,7 +13,7 @@ void tree_destory (struct Tree **tree);
 Int32 tree_clear (struct Tree **tree);
 /// returns numbers of cleared nodes
 Boolean tree_is_empty (struct Tree *tree);
-/// returns depth of tree
+/// returns depth of tree (0 is beginning)
 Int32 tree_tree_depth (struct Tree *tree);
 /// travserse tree though function visit, traverse stops until visit returns less than 0
 void tree_traverse (struct Tree *tree, tree_traverse_t type, Int32 (*visit) (struct tree_node*));

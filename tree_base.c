@@ -37,16 +37,29 @@ Boolean tree_is_empty (struct Tree *tree) {
 	return ret;
 }
 
-Int32 tree_tree_depth (struct Tree *tree) {
+static Int32 traverse_for_depth(struct tree_node *node,Int32 depth) {
+	if (!node)
+		return depth;
+	Int32 i,ret = depth;
+	for (i = 0; i < node->child_count; ++i) {
+		Int32 new_ret = traverse_for_depth(node->childs[i],depth + 1);
+		if (new_ret > ret)
+			ret = new_ret;
+	}
 
+	return ret;
 }
 
-static Int32 print_node (struct tree_node* node) {
-	if (node) {
-		printf("node : %c\n",node->data);
-		return 1;
-	} else
-		return -1;
+Int32 tree_tree_depth (struct Tree *tree) {
+	Int32 ret = 0;
+	if (!tree)
+		return ret;
+	if (!tree->root)
+		return ret;
+
+	ret = traverse_for_depth(tree->root,0);
+
+	return ret;
 }
 
 static Int32 depth_priority_traverse(struct tree_node *node, Int32 (*visit) (struct tree_node*)) {
@@ -70,6 +83,8 @@ void tree_traverse (struct Tree *tree, tree_traverse_t type, Int32 (*visit) (str
 	switch (type) {
 	case TREE_TRAVERSE_DEPTHPRIORITY:
 		depth_priority_traverse(tree->root,visit);
+		break;
+	case TREE_TRAVERSE_WIDTHPRIORITY:
 		break;
 	default:
 		break;

@@ -21,7 +21,7 @@ struct tree_operations {
 	void (*destory) (struct Tree **tree);
 	Int32 (*clear) (struct Tree **tree); /// returns numbers of cleared nodes
 	Boolean (*is_empty) (struct Tree *tree);
-	Int32 (*tree_depth) (struct Tree *tree);
+	Int32 (*tree_depth) (struct Tree *tree); /// returns depth of tree (0 is beginning)
 	void (*traverse) (struct Tree *tree, tree_traverse_t type, Int32 (*visit) (struct tree_node*)); /// traverse stops until visit returns less than 0
 	struct tree_node* (*root_of_tree) (struct Tree *tree);
 };
