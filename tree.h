@@ -11,6 +11,7 @@ struct Tree {
 	struct tree_node* root;
 	tree_type_t type;
 	Int32 max_child_count_of_node;
+	struct tree_operations *tree_opera;
 	struct tree_node_operations *node_opera;
 };
 

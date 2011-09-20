@@ -1,8 +1,15 @@
-OBJS := main.o tree_node_base.o tree_base.o tree_operation.o
+SRC := $(shell ls ./*.c)
+OBJS = $(SRC:.c=.o)
 
-TARGET := a
+TAR_EXEC := a
+TAR_LIB := tree.so
+TAR_ALIB := tree.a
+
+CFLAGS += -g
 
 default:$(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) -o $(TARGET)
+	$(CC) $(CFLAGS) $(OBJS) -o $(TAR_EXEC)
+	$(CC) $(CFLAGS) $(OBJS) -shared -o $(TAR_LIB)
+	ar -r $(TAR_ALIB) $(OBJS)
 clean:
-	rm -rf $(OBJS) $(EXEC)
+	rm $(OBJS) $(TAR_EXEC) $(TAR_LIB) $(TAR_ALIB)
