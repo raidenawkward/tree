@@ -5,7 +5,10 @@ struct tree_node* treenode_get_root (struct tree_node* node) {
 		return NULL;
 	struct tree_node* ret = node->parent;
 	while (ret) {
-		ret = ret->parent;
+		if (ret->parent)
+			ret = ret->parent;
+		else
+			break;
 	}
 	return ret;
 }
@@ -25,26 +28,36 @@ Int32 treenode_child_count (struct tree_node *node) {
 Boolean treenode_append_child (struct tree_node *node, struct tree_node *child) {
 	if (!node)
 		return false;
-	return treenode_insert_child(node,node->child_count - 1,child);
+	return treenode_insert_child(node,node->child_count,child);
 }
 
 Boolean treenode_insert_child (struct tree_node *node, Int32 index, struct tree_node *child) {
 	Boolean ret = false;
 	if (!node || !child)
 		return ret;
-	if (index < 0 || node->child_count || index >= node->child_count)
+	if (index < 0
+		|| node->child_count < 0
+		|| index > node->child_count)
 		return ret;
 
-	struct tree_node **new_base = (struct tree_node**)realloc(node->childs,(node->child_count + 1) * sizeof(struct tree_node*));
+	struct tree_node **new_base;
+	if (node->child_count <= 0) {
+		node->child_count = 0;
+		new_base = (struct tree_node**)malloc(sizeof(struct tree_node*));
+	} else {
+		new_base = (struct tree_node**)realloc(node->childs,(node->child_count + 1) * sizeof(struct tree_node*));
+	}
+
 	if (!new_base)
 		return ret;
 	node->childs = new_base;
 	++ node->child_count;
 	Int32 i;
-	for (i = index; i < node->child_count - 1; ++i) {
-		node->childs[i + 1] = node->childs[i];
+	for (i = node->child_count - 1; i > index; --i) {
+		node->childs[i] = node->childs[i - 1];
 	}
 	node->childs[index] = child;
+	child->parent = node;
 
 	ret = true;
 	return ret;
@@ -76,8 +89,8 @@ Int32 treenode_get_child_index (struct tree_node *node, struct tree_node *child)
 
 	Int32 i;
 	for (i = 0; i < node->child_count; ++i) {
-		struct tree_node *node = node->childs[i];
-		if (treenode_equal_node) {
+		struct tree_node *n = node->childs[i];
+		if (treenode_equal_node(n,child)) {
 			ret = i;
 			break;
 		}
