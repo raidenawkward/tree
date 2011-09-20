@@ -15,7 +15,7 @@ typedef unsigned int UInt32;
 typedef int Int32;
 
 typedef enum {
-	TREE_TYPE_NORMAL0 =0,
+	TREE_TYPE_NORMAL =0,
 	TREE_TYPE_UNKNOWN
 } tree_type_t;
 

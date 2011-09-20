@@ -6,10 +6,23 @@
 #include "tree_node_base.h"
 #include "tree_operation.h"
 
-int main(int argc, char** argv) {
-	struct tree_node_operations *node_op = treenode_get_operation();
-	if (!node_op)
+static Int32 print_node (struct tree_node* node) {
+	if (node) {
+		printf("node : %c\n",node->data);
+		return 1;
+	} else
 		return -1;
+}
+
+int main(int argc, char** argv) {
+	struct tree_operations *tree_op = tree_get_operation();
+	struct tree_node_operations *node_op = treenode_get_operation();
+
+	if (!node_op || !tree_op)
+		return -1;
+
+	struct Tree *tree;
+	tree_op->create(&tree,TREE_TYPE_NORMAL);
 
 	struct tree_node *n1 = (struct tree_node*)malloc(sizeof(struct tree_node));
 	n1->data = 'a';
@@ -30,12 +43,15 @@ int main(int argc, char** argv) {
 	n6->data = 'f';
 	n6->child_count = 0;
 
+	tree->root = n1;
 	node_op->append_child(n1,n2);
 	node_op->append_child(n1,n3);
-	node_op->append_child(n1,n4);
-	node_op->insert_child(n1,3,n5);
-	node_op->insert_child(n1,4,n6);
+	node_op->append_child(n2,n4);
+	node_op->append_child(n2,n5);
+	node_op->append_child(n3,n6);
 
+	tree_op->traverse(tree,TREE_TRAVERSE_DEPTHPRIORITY,print_node);
+#if 0
 	Int32 i;
 	for (i = 0; i < node_op->child_count(n1); ++i) {
 		struct tree_node *node = node_op->get_child(n1,i);
@@ -54,6 +70,6 @@ int main(int argc, char** argv) {
 	printf("l sibling of n3 : %c\n",node_op->get_left_sibling(n3)->data);
 	printf("r sibling of n3 : %c\n",node_op->get_right_sibling(n3)->data);
 	printf("root of  n4 : %c\n",node_op->get_root(n4)->data);
-
+#endif
 	return 0;
 }

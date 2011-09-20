@@ -3,9 +3,10 @@
 
 #include "tree_define.h"
 #include "tree.h"
+#include "tree_operation.h"
 
-/// empty new tree created
-void tree_create (struct Tree **tree, tree_type_t type);
+/// empty new tree created, root node returns, NULL if failed
+Boolean tree_create (struct Tree **tree, tree_type_t type);
 /// tree destory, and nodes of tree would also be deleted
 void tree_destory (struct Tree **tree);
 /// clear tree members, and nodes of tree would also be deleted
