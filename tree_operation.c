@@ -32,6 +32,6 @@ struct tree_node_operations* treenode_get_operation() {
 	op->remove_child = treenode_remove_child;
 	op->get_left_sibling = treenode_get_left_sibling;
 	op->get_right_sibling = treenode_get_right_sibling;
-
+	op->equal_node = treenode_equal_node;
 	return op;
 }

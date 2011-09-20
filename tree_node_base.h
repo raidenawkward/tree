@@ -30,5 +30,6 @@ struct tree_node* treenode_remove_child (struct tree_node *node, int index);
 struct tree_node* treenode_get_left_sibling (struct tree_node *node);
 /// get right sibling of node in parent node
 struct tree_node* treenode_get_right_sibling (struct tree_node *node);
-
+/// compare tree node
+Boolean treenode_equal_node (struct tree_node *n1, struct tree_node *n2);
 #endif // _TREE_NODE_BASE_H

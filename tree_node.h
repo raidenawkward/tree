@@ -27,7 +27,7 @@ struct tree_node_operations {
 	struct tree_node* (*remove_child) (struct tree_node *node, int index); /// remove node from tree, but returns the node
 	struct tree_node* (*get_left_sibling) (struct tree_node *node);
 	struct tree_node* (*get_right_sibling) (struct tree_node *node);
-
+	Boolean (*equal_node) (struct tree_node *n1, struct tree_node *n2);
 };
 
 #endif // _TREE_NODE_H
