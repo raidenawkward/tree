@@ -5,8 +5,8 @@ SRC := $(shell ls ./*.c)
 OBJS := $(SRC:.c=.o)
 
 TAR_EXEC := a
-TAR_LIB := $(NAME).so
-TAR_ALIB := $(NAME).a
+TAR_LIB := lib$(NAME).so
+TAR_ALIB := lib$(NAME).a
 
 default:$(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o $(TAR_EXEC)
