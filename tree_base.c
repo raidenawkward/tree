@@ -67,10 +67,29 @@ static Int32 depth_priority_traverse(struct tree_node *node, Int32 (*visit) (str
 		return -1;
 	Int32 i;
 
-	visit(node);
+	if (visit(node) < 0)
+		return -1;
 
 	for (i = 0; i < node->child_count; ++i) {
-		depth_priority_traverse(node->childs[i],visit);
+		if (depth_priority_traverse(node->childs[i],visit) < 0)
+			return -1;
+	}
+	return 1;
+}
+
+static Int32 width_priority_traverse(struct tree_node *node, Int32 (*visit) (struct tree_node*)) {
+	if (!node)
+		return -1;
+
+	Int32 i;
+	for (i = 0; i < node->child_count; ++i) {
+		if (visit(node->childs[i]) < 0)
+			return -1;
+	}
+
+	for (i = 0; i < node->child_count; ++i) {
+		if (width_priority_traverse(node->childs[i], visit) < 0)
+			return -1;
 	}
 	return 1;
 }
@@ -85,6 +104,9 @@ void tree_traverse (struct Tree *tree, tree_traverse_t type, Int32 (*visit) (str
 		depth_priority_traverse(tree->root,visit);
 		break;
 	case TREE_TRAVERSE_WIDTHPRIORITY:
+		if (!visit(tree->root))
+			return;
+		width_priority_traverse(tree->root,visit);
 		break;
 	default:
 		break;

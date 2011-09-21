@@ -45,12 +45,13 @@ int main(int argc, char** argv) {
 
 	tree->root = n1;
 	node_op->append_child(n1,n2);
-	node_op->append_child(n2,n3);
-	node_op->append_child(n3,n4);
-	node_op->append_child(n4,n5);
-	node_op->append_child(n5,n6);
+	node_op->append_child(n1,n3);
+	node_op->append_child(n2,n4);
+	node_op->append_child(n3,n5);
+	node_op->append_child(n3,n6);
 
-	tree_op->traverse(tree,TREE_TRAVERSE_DEPTHPRIORITY,print_node);
+//	tree_op->traverse(tree,TREE_TRAVERSE_DEPTHPRIORITY,print_node);
+	tree_op->traverse(tree,TREE_TRAVERSE_WIDTHPRIORITY,print_node);
 	printf("depth of tree : %d\n",tree_op->tree_depth(tree));
 #if 0
 	Int32 i;
