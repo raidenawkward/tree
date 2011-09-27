@@ -153,3 +153,79 @@ Boolean treenode_equal_node (struct tree_node *n1, struct tree_node *n2) {
 	ret = true;
 	return ret;
 }
+
+Int32 treenode_free_node (struct tree_node *node){
+	if (!node)
+		return 0;
+
+	Int32 ret = 1,i;
+
+	for (i = 0; i < node->child_count; ++i) {
+		struct tree_node *child = node->childs[i];
+		ret += treenode_free_node(child);
+	}
+	for (i = 0; i < node->child_count; ++i) {
+		free(node->childs[i]);
+	}
+	node->child_count = 0;
+	return ret;
+}
+
+Int32 treenode_get_node_depth (struct tree_node *node, Int32 depth){
+	if (!node)
+		return depth;
+	Int32 i,ret = depth;
+	for (i = 0; i < node->child_count; ++i) {
+		Int32 new_ret = treenode_get_node_depth(node->childs[i],depth + 1);
+		if (new_ret > ret)
+			ret = new_ret;
+	}
+
+	return ret;
+}
+
+Int32 treenode_get_node_width (struct tree_node *node){
+	return -1;
+}
+
+Int32 treenode_get_nodes_count (struct tree_node *node){
+	if (!node)
+		return 0;
+	Int32 ret = 1,i;
+	for (i = 0; i < node->child_count; ++i) {
+		ret += treenode_get_nodes_count(node->childs[i]);
+	}
+	return ret;
+}
+
+Int32 treenode_depth_priority_traverse (struct tree_node *node, Int32 (*visit) (struct tree_node*)) {
+	if (!node)
+		return -1;
+	Int32 i;
+
+	if (visit(node) < 0)
+		return -1;
+
+	for (i = 0; i < node->child_count; ++i) {
+		if (treenode_depth_priority_traverse(node->childs[i],visit) < 0)
+			return -1;
+	}
+	return 1;
+}
+
+Int32 treenode_width_priority_traverse (struct tree_node *node, Int32 (*visit) (struct tree_node*)){
+	if (!node)
+		return -1;
+
+	Int32 i;
+	for (i = 0; i < node->child_count; ++i) {
+		if (visit(node->childs[i]) < 0)
+			return -1;
+	}
+
+	for (i = 0; i < node->child_count; ++i) {
+		if (treenode_width_priority_traverse(node->childs[i], visit) < 0)
+			return -1;
+	}
+	return 1;
+}

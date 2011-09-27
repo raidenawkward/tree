@@ -34,5 +34,11 @@ struct tree_node_operations* treenode_get_operation() {
 	op->get_left_sibling = treenode_get_left_sibling;
 	op->get_right_sibling = treenode_get_right_sibling;
 	op->equal_node = treenode_equal_node;
+	op->free_node = treenode_free_node;
+	op->get_node_depth = treenode_get_node_depth;
+	op->get_node_width = treenode_get_node_width;
+	op->get_nodes_count = treenode_get_nodes_count;
+	op->depth_priority_traverse = treenode_depth_priority_traverse;
+	op->width_priority_traverse = treenode_width_priority_traverse;
 	return op;
 }

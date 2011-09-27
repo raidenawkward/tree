@@ -32,4 +32,14 @@ struct tree_node* treenode_get_left_sibling (struct tree_node *node);
 struct tree_node* treenode_get_right_sibling (struct tree_node *node);
 /// compare tree node
 Boolean treenode_equal_node (struct tree_node *n1, struct tree_node *n2);
+/// free node and its childs
+Int32 treenode_free_node (struct tree_node *node);
+/// get depth of node
+Int32 treenode_get_node_depth (struct tree_node *node, Int32 base_depth);
+//// get biggest distance between 2 child nodes
+Int32 treenode_get_node_width (struct tree_node *node);
+/// get total count of node and its childs
+Int32 treenode_get_nodes_count (struct tree_node *node);
+Int32 treenode_depth_priority_traverse (struct tree_node *node, Int32 (*visit) (struct tree_node*));
+Int32 treenode_width_priority_traverse (struct tree_node *node, Int32 (*visit) (struct tree_node*));
 #endif // _TREE_NODE_BASE_H

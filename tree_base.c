@@ -45,7 +45,10 @@ Int32 tree_clear (struct Tree **tree) {
 		return ret;
 	if (!(*tree)->root)
 		return ret;
-	ret = free_tree_node((*tree)->root);
+	if ((*tree)->node_opera)
+		ret = (*tree)->node_opera->free_node((*tree)->root);
+	else
+		ret = free_tree_node((*tree)->root);
 	(*tree)->root = NULL;
 	return ret;
 }
@@ -82,7 +85,10 @@ Int32 tree_tree_depth (struct Tree *tree) {
 	if (!tree->root)
 		return ret;
 
-	ret = traverse_for_depth(tree->root,0);
+	if (tree->node_opera)
+		ret = tree->node_opera->get_node_depth(tree->root,0);
+	else
+		ret = traverse_for_depth(tree->root,0);
 
 	return ret;
 }
@@ -103,7 +109,10 @@ Int32 tree_node_count (struct Tree *tree) {
 		return ret;
 	if (!tree->root)
 		return ret;
-	ret = get_node_child_nodes(tree->root);
+	if (tree->node_opera)
+		ret = tree->node_opera->get_nodes_count(tree->root);
+	else
+		ret = get_node_child_nodes(tree->root);
 	return ret;
 }
 
@@ -146,12 +155,18 @@ void tree_traverse (struct Tree *tree, tree_traverse_t type, Int32 (*visit) (str
 		return;
 	switch (type) {
 	case TREE_TRAVERSE_DEPTHPRIORITY:
-		depth_priority_traverse(tree->root,visit);
+		if (tree->node_opera)
+			tree->node_opera->depth_priority_traverse(tree->root,visit);
+		else
+			depth_priority_traverse(tree->root,visit);
 		break;
 	case TREE_TRAVERSE_WIDTHPRIORITY:
 		if (!visit(tree->root))
 			return;
-		width_priority_traverse(tree->root,visit);
+		if (tree->node_opera)
+			tree->node_opera->width_priority_traverse(tree->root,visit);
+		else
+			width_priority_traverse(tree->root,visit);
 		break;
 	default:
 		break;

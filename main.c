@@ -23,6 +23,7 @@ int main(int argc, char** argv) {
 
 	struct Tree *tree;
 	tree_op->create(&tree,TREE_TYPE_NORMAL);
+	tree->node_opera = node_op;
 
 	struct tree_node *n1 = (struct tree_node*)malloc(sizeof(struct tree_node));
 	n1->data = 'a';
