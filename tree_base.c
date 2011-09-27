@@ -17,12 +17,37 @@ Boolean tree_create (struct Tree **tree, tree_type_t type) {
 }
 
 void tree_destory (struct Tree **tree) {
-	if (tree)
-		free(tree);
+	tree_clear(tree);
+	if (*tree)
+		free(*tree);
+}
+
+static Int32 free_tree_node(struct tree_node *node) {
+	if (!node)
+		return 0;
+
+	Int32 ret = 1,i;
+
+	for (i = 0; i < node->child_count; ++i) {
+		struct tree_node *child = node->childs[i];
+		ret += free_tree_node(child);
+	}
+	for (i = 0; i < node->child_count; ++i) {
+		free(node->childs[i]);
+	}
+	node->child_count = 0;
+	return ret;
 }
 
 Int32 tree_clear (struct Tree **tree) {
-	return 0;
+	Int32 ret = 0;
+	if (!tree || !(*tree))
+		return ret;
+	if (!(*tree)->root)
+		return ret;
+	ret = free_tree_node((*tree)->root);
+	(*tree)->root = NULL;
+	return ret;
 }
 
 Boolean tree_is_empty (struct Tree *tree) {
@@ -59,6 +84,26 @@ Int32 tree_tree_depth (struct Tree *tree) {
 
 	ret = traverse_for_depth(tree->root,0);
 
+	return ret;
+}
+
+static Int32 get_node_child_nodes(struct tree_node *node) {
+	if (!node)
+		return 0;
+	Int32 ret = 1,i;
+	for (i = 0; i < node->child_count; ++i) {
+		ret += get_node_child_nodes(node->childs[i]);
+	}
+	return ret;
+}
+
+Int32 tree_node_count (struct Tree *tree) {
+	Int32 ret = 0;
+	if (!tree)
+		return ret;
+	if (!tree->root)
+		return ret;
+	ret = get_node_child_nodes(tree->root);
 	return ret;
 }
 
