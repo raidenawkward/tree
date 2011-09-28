@@ -59,11 +59,11 @@ int main(int argc, char** argv) {
 
 	printf("childs of root 1 : %d\n",node_op->child_count(tree->root));
 	printf("childs of root 2 : %d\n",node_op->child_count(tree2->root));
-#if 0
+#if 1
 	printf("traverse t1 : \n");
-	tree_op->traverse(tree,TREE_TRAVERSE_WIDTHPRIORITY,print_node);
+	tree_op->traverse(tree,TREE_TRAVERSE_DEPTHPRIORITY,print_node);
 	printf("\ntraverse t2 : \n");
-	tree_op->traverse(tree2,TREE_TRAVERSE_WIDTHPRIORITY,print_node);
+	tree_op->traverse(tree2,TREE_TRAVERSE_DEPTHPRIORITY,print_node);
 #endif
 #if 0
 	printf("distance between n4 and n6 : %d\n",node_op->get_node_distance(n4,n6));

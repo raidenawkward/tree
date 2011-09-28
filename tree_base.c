@@ -268,10 +268,8 @@ static Boolean read_tree_head(FILE* fp, struct Tree **tree) {
 	return true;
 }
 
-static int read_node_childs_recursively (FILE* fp, struct Tree *tree, struct tree_node *root) {
-	if (!fp || !tree || !root)
-		return 0;
-	if (!tree->node_opera)
+static int read_node_childs_recursively (FILE* fp, struct tree_node *root) {
+	if (!fp || !root)
 		return 0;
 
 	Int32 i,ret = 0;
@@ -283,13 +281,12 @@ static int read_node_childs_recursively (FILE* fp, struct Tree *tree, struct tre
 			free(child);
 			break;
 		}
-		if(!tree->node_opera->append_child(root,child))
-			break;
+		root->childs[i] = child;
 		++ret;
 	}
 
 	for (i = 0; i < root->child_count; ++i) {
-		ret += read_node_childs_recursively(fp,tree,root->childs[i]);
+		ret += read_node_childs_recursively(fp,root->childs[i]);
 	}
 
 	return ret;
@@ -317,7 +314,7 @@ Int32 tree_load (struct Tree **tree, const Char* file) {
 	(*tree)->root = root;
 	ret += 1;
 
-	ret += read_node_childs_recursively(fp,*tree,root);
+	ret += read_node_childs_recursively(fp,root);
 
 done:
 	fclose(fp);
