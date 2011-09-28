@@ -320,3 +320,7 @@ done:
 	fclose(fp);
 	return ret;
 }
+
+Int32 depth_nodes (struct Tree *tree, Int32 depth, struct tree_node **ret) {
+	return 0;
+}

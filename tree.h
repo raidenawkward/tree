@@ -1,8 +1,6 @@
 #ifndef _TREE_H
 #define _TREE_H
 
-#include <stdlib.h>
-#include <stdio.h>
 #include "tree_define.h"
 #include "tree_node.h"
 
@@ -16,7 +14,6 @@ struct Tree {
 
 /// operations for tree
 struct tree_operations {
-	/// operations for tree
 	Boolean (*create) (struct Tree **tree, tree_type_t type);
 	void (*destory) (struct Tree **tree);
 	Int32 (*clear) (struct Tree **tree); /// returns numbers of cleared nodes
@@ -29,6 +26,7 @@ struct tree_operations {
 	Boolean (*isParallel) (struct Tree *t1, struct Tree *t2); /// returns if t1,t2 have no joint node
 	Int32 (*save) (struct Tree *tree, const Char* file); /// save tree to file, returns nodes count that have been saved
 	Int32 (*load) (struct Tree **tree, const Char* file); /// load tree struct from file to tree, returns nodes count that have been loaded
+	Int32 (*depth_nodes) (struct Tree *tree, Int32 depth, struct tree_node **ret); /// returns nodes and nodes count of tree with specified depth in left->right order
 };
 
 #endif // _TREE_H
