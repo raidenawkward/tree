@@ -10,6 +10,7 @@ typedef enum {
 	true
 } Boolean;
 
+typedef char Char;
 typedef unsigned char UChar;
 typedef unsigned int UInt32;
 typedef int Int32;

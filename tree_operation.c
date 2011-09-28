@@ -13,6 +13,8 @@ struct tree_operations* tree_get_operation() {
 	op->node_count = tree_node_count;
 	op->traverse = tree_traverse;
 	op->root_of_tree = tree_root_of_tree;
+	op->save = tree_save;
+	op->load = tree_load;
 	
 	return op;
 }

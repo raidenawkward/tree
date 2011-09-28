@@ -50,10 +50,26 @@ int main(int argc, char** argv) {
 	node_op->append_child(n2,n4);
 	node_op->append_child(n3,n5);
 	node_op->append_child(n3,n6);
+//	tree->root = NULL;
 
+	printf("%d nodes saved\n",tree_op->save(tree,"./save.tree"));
+
+	struct Tree *tree2;
+	printf("%d nodes loaded\n",tree_op->load(&tree2,"./save.tree"));
+
+	printf("childs of root 1 : %d\n",node_op->child_count(tree->root));
+	printf("childs of root 2 : %d\n",node_op->child_count(tree2->root));
+#if 0
+	printf("traverse t1 : \n");
+	tree_op->traverse(tree,TREE_TRAVERSE_WIDTHPRIORITY,print_node);
+	printf("\ntraverse t2 : \n");
+	tree_op->traverse(tree2,TREE_TRAVERSE_WIDTHPRIORITY,print_node);
+#endif
+#if 0
 	printf("distance between n4 and n6 : %d\n",node_op->get_node_distance(n4,n6));
-//	printf("distance between n1 and n6 : %d\n",node_op->get_node_distance(n1,n6));
-//	printf("distance between n2 and n6 : %d\n",node_op->get_node_distance(n2,n6));
+	printf("distance between n1 and n6 : %d\n",node_op->get_node_distance(n1,n6));
+	printf("distance between n2 and n6 : %d\n",node_op->get_node_distance(n2,n6));
+#endif
 #if 0
 	printf("depth of n1 : %d\n",node_op->get_node_depth(n1));
 	printf("depth of n2 : %d\n",node_op->get_node_depth(n2));

@@ -27,6 +27,8 @@ struct tree_operations {
 	void (*traverse) (struct Tree *tree, tree_traverse_t type, Int32 (*visit) (struct tree_node*)); /// traverse stops until visit returns less than 0
 	struct tree_node* (*root_of_tree) (struct Tree *tree);
 	Boolean (*isParallel) (struct Tree *t1, struct Tree *t2); /// returns if t1,t2 have no joint node
+	Int32 (*save) (struct Tree *tree, const Char* file); /// save tree to file, returns nodes count that have been saved
+	Int32 (*load) (struct Tree **tree, const Char* file); /// load tree struct from file to tree, returns nodes count that have been loaded
 };
 
 #endif // _TREE_H

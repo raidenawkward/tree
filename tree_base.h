@@ -23,6 +23,11 @@ Int32 tree_node_count (struct Tree *tree);
 void tree_traverse (struct Tree *tree, tree_traverse_t type, Int32 (*visit) (struct tree_node*));
 /// returns root node of a tree
 struct tree_node* tree_root_of_tree (struct Tree *tree);
-
+/// save tree to file, returns nodes count that have been saved
+//* fwrite used, may not be transplantable
+Int32 tree_save (struct Tree *tree, const Char* file);
+/// load tree struct from file to tree, returns nodes count that have been loaded
+//* fread used, may not be transplantable
+Int32 tree_load (struct Tree **tree, const Char* file);
 
 #endif // _TREE_BASE_H

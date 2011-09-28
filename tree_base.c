@@ -1,5 +1,8 @@
 #include "tree_base.h"
 
+#include <stdio.h>
+#include <stdlib.h>
+
 Boolean tree_create (struct Tree **tree, tree_type_t type) {
 	*tree = (struct Tree*)malloc(sizeof(struct Tree));
 	if (!(*tree))
@@ -189,4 +192,134 @@ struct tree_node* tree_root_of_tree (struct Tree *tree) {
 	return tree->root;
 }
 
+static Boolean save_tree_node(FILE* fp, struct tree_node *node) {
+	if (!fp || !node)
+		return false;
+	if (!fwrite(node,sizeof(struct tree_node),1,fp))
+		return false;
+	return true;
+}
 
+/// save tree struct
+static Boolean save_tree_head(FILE* fp, struct Tree *tree) {
+	if (!fp || !tree)
+		return false;
+	if (!fwrite(tree,sizeof(struct Tree),1,fp))
+		return false;
+	return true;
+}
+
+static Int32 save_node_childs_recursively(FILE* fp, struct tree_node *root) {
+	if (!root || !fp)
+		return 0;
+	Int32 i,ret = 0;
+
+	for (i = 0; i < root->child_count; ++i) {
+		if (save_tree_node(fp,root->childs[i]))
+			++ ret;
+	}
+
+	for (i = 0; i < root->child_count; ++i) {
+		ret += save_node_childs_recursively(fp,root->childs[i]);
+	}
+
+	return ret;
+}
+
+Int32 tree_save (struct Tree *tree, const Char* file) {
+	Int32 ret = 0;
+	if (!tree)
+		return ret;
+	if (!tree->root)
+		return ret;
+
+	FILE* fp = fopen(file,"w+");
+	if (!fp)
+		return ret;
+
+	if (!save_tree_head(fp,tree))
+		goto done;
+
+	ret += save_tree_node(fp,tree->root);
+	ret += save_node_childs_recursively(fp, tree->root);
+
+done:
+	fclose(fp);
+	return ret;
+}
+
+/// read tree struct
+static Boolean read_tree_head(FILE* fp, struct Tree **tree) {
+	if (!fp)
+		return false;
+	if (fseek(fp,0L,SEEK_SET) < 0)
+		return false;
+
+	*tree = (struct Tree*)malloc(sizeof(struct Tree));
+	if (!tree)
+		return false;
+
+	if (!fread(*tree,sizeof(struct Tree),1,fp)) {
+		free(*tree);
+		return false;
+	}
+
+	(*tree)->node_opera = treenode_get_operation();
+	return true;
+}
+
+static int read_node_childs_recursively (FILE* fp, struct Tree *tree, struct tree_node *root) {
+	if (!fp || !tree || !root)
+		return 0;
+	if (!tree->node_opera)
+		return 0;
+
+	Int32 i,ret = 0;
+	for (i = 0; i < root->child_count; ++i) {
+		struct tree_node *child = (struct tree_node*)malloc(sizeof(struct tree_node));
+		if (!child)
+			break;
+		if 	(!fread(child,sizeof(struct tree_node),1,fp)) {
+			free(child);
+			break;
+		}
+		if(!tree->node_opera->append_child(root,child))
+			break;
+		++ret;
+	}
+
+	for (i = 0; i < root->child_count; ++i) {
+		ret += read_node_childs_recursively(fp,tree,root->childs[i]);
+	}
+
+	return ret;
+}
+
+Int32 tree_load (struct Tree **tree, const Char* file) {
+	if (!file)
+		return 0;
+	FILE *fp = fopen(file,"r+");
+	if (!fp)
+		return 0;
+
+	Int32 ret = 0;
+
+	if (!read_tree_head(fp,tree))
+		goto done;
+
+	// root node
+	struct tree_node *root = (struct tree_node*)malloc(sizeof(struct tree_node));
+	if (!root)
+		goto done;
+	if (!fread(root,sizeof(struct tree_node),1,fp))
+		goto done;
+	root->parent = NULL;
+	(*tree)->root = root;
+	ret += 1;
+
+	ret += read_node_childs_recursively(fp,*tree,root);
+
+done:
+	fclose(fp);
+	return ret;
+}
