@@ -136,8 +136,11 @@ struct tree_node* treenode_get_right_sibling (struct tree_node *node) {
 
 Boolean treenode_equal_node (struct tree_node *n1, struct tree_node *n2) {
 	Boolean ret = false;
-	if (!n1 || !n2)
+	if (!n1 || !n2) {
+		if (n1 == n2)
+			return true;
 		return ret;
+	}
 
 	if (n1->flag != n2->flag)
 		return ret;
@@ -276,6 +279,7 @@ struct tree_node* treenode_get_nearest_parent (struct tree_node *n1, struct tree
 			p2 = p2->parent;
 		}
 		p1 = p1->parent;
+		p2 = n2->parent;
 	}
 	return NULL;
 }

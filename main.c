@@ -51,6 +51,18 @@ int main(int argc, char** argv) {
 	node_op->append_child(n3,n5);
 	node_op->append_child(n3,n6);
 
+	printf("distance between n4 and n6 : %d\n",node_op->get_node_distance(n4,n6));
+//	printf("distance between n1 and n6 : %d\n",node_op->get_node_distance(n1,n6));
+//	printf("distance between n2 and n6 : %d\n",node_op->get_node_distance(n2,n6));
+#if 0
+	printf("depth of n1 : %d\n",node_op->get_node_depth(n1));
+	printf("depth of n2 : %d\n",node_op->get_node_depth(n2));
+	printf("depth of n3 : %d\n",node_op->get_node_depth(n3));
+	printf("depth of n4 : %d\n",node_op->get_node_depth(n4));
+	printf("depth of n5 : %d\n",node_op->get_node_depth(n5));
+	printf("depth of n6 : %d\n",node_op->get_node_depth(n6));
+#endif
+#if 0
 //	tree_op->traverse(tree,TREE_TRAVERSE_DEPTHPRIORITY,print_node);
 	tree_op->traverse(tree,TREE_TRAVERSE_WIDTHPRIORITY,print_node);
 	printf("depth of tree : %d\n",tree_op->tree_depth(tree));
@@ -58,7 +70,7 @@ int main(int argc, char** argv) {
 	printf("before clear, count of tree is :%d\n",tree_op->node_count(tree));
 	printf("clear tree , %d nodes were free\n",tree_op->clear(&tree));
 	printf("after clear, count of tree is :%d\n",tree_op->node_count(tree));
-
+#endif
 	tree_op->destory(&tree);
 #if 0
 	Int32 i;

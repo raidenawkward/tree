@@ -45,5 +45,6 @@ struct tree_node_operations* treenode_get_operation() {
 	op->is_parent_of = treenode_is_parent_of;
 	op->is_child_of = treenode_is_child_of;
 	op->get_nearest_parent = treenode_get_nearest_parent;
+	op->get_node_depth = treenode_get_node_depth;
 	return op;
 }
