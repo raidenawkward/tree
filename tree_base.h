@@ -31,5 +31,7 @@ Int32 tree_save (struct Tree *tree, const Char* file);
 Int32 tree_load (struct Tree **tree, const Char* file);
 /// returns nodes and nodes count of tree with specified depth in left->right order
 Int32 depth_nodes (struct Tree *tree, Int32 depth, struct tree_node **ret);
+Boolean append_child (struct Tree *tree, struct tree_node *node, struct tree_node *child);
+Boolean insert_child (struct Tree *tree, struct tree_node *node, Int32 index, struct tree_node *child);
 
 #endif // _TREE_BASE_H

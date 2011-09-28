@@ -324,3 +324,35 @@ done:
 Int32 depth_nodes (struct Tree *tree, Int32 depth, struct tree_node **ret) {
 	return 0;
 }
+
+Boolean append_child (struct Tree *tree, struct tree_node *node, struct tree_node *child) {
+	if (!tree || !node)
+		return false;
+
+	if (!tree->node_opera)
+		return false;
+	if (!tree->node_opera->append_child)
+		return false;
+
+	if (tree->max_child_count_of_node <= node->child_count)
+		return false;
+
+	return tree->node_opera->append_child(node,child);
+}
+
+Boolean insert_child (struct Tree *tree, struct tree_node *node, Int32 index, struct tree_node *child) {
+	if (!tree || !node)
+		return false;
+
+	if (!tree->node_opera)
+		return false;
+	if (!tree->node_opera->insert_child)
+		return false;
+
+	if (tree->max_child_count_of_node <= node->child_count)
+		return false;
+
+	return tree->node_opera->insert_child(node,index,child);
+}
+
+
