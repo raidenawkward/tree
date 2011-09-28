@@ -9,6 +9,7 @@ struct tree_operations* tree_get_operation() {
 	op->clear = tree_clear;
 	op->is_empty = tree_is_empty;
 	op->tree_depth = tree_tree_depth;
+	op->tree_width = tree_tree_width;
 	op->node_count = tree_node_count;
 	op->traverse = tree_traverse;
 	op->root_of_tree = tree_root_of_tree;
@@ -35,10 +36,14 @@ struct tree_node_operations* treenode_get_operation() {
 	op->get_right_sibling = treenode_get_right_sibling;
 	op->equal_node = treenode_equal_node;
 	op->free_node = treenode_free_node;
-	op->get_node_depth = treenode_get_node_depth;
+	op->get_node_largest_depth = treenode_get_node_largest_depth;
 	op->get_node_width = treenode_get_node_width;
 	op->get_nodes_count = treenode_get_nodes_count;
 	op->depth_priority_traverse = treenode_depth_priority_traverse;
 	op->width_priority_traverse = treenode_width_priority_traverse;
+	op->get_node_distance = treenode_get_node_distance;
+	op->is_parent_of = treenode_is_parent_of;
+	op->is_child_of = treenode_is_child_of;
+	op->get_nearest_parent = treenode_get_nearest_parent;
 	return op;
 }

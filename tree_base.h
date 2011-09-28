@@ -15,6 +15,9 @@ Int32 tree_clear (struct Tree **tree);
 Boolean tree_is_empty (struct Tree *tree);
 /// returns depth of tree (0 is beginning)
 Int32 tree_tree_depth (struct Tree *tree);
+/// returns distande between most left node and most right node
+Int32 tree_tree_width (struct Tree *tree);
+/// returns total node counts of tree
 Int32 tree_node_count (struct Tree *tree);
 /// travserse tree though function visit, traverse stops until visit returns less than 0
 void tree_traverse (struct Tree *tree, tree_traverse_t type, Int32 (*visit) (struct tree_node*));

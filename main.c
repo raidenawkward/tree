@@ -54,6 +54,7 @@ int main(int argc, char** argv) {
 //	tree_op->traverse(tree,TREE_TRAVERSE_DEPTHPRIORITY,print_node);
 	tree_op->traverse(tree,TREE_TRAVERSE_WIDTHPRIORITY,print_node);
 	printf("depth of tree : %d\n",tree_op->tree_depth(tree));
+	printf("width of tree : %d\n",tree_op->tree_width(tree));
 	printf("before clear, count of tree is :%d\n",tree_op->node_count(tree));
 	printf("clear tree , %d nodes were free\n",tree_op->clear(&tree));
 	printf("after clear, count of tree is :%d\n",tree_op->node_count(tree));

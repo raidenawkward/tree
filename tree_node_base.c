@@ -98,7 +98,7 @@ Int32 treenode_get_child_index (struct tree_node *node, struct tree_node *child)
 	return ret;
 }
 
-struct tree_node* treenode_remove_child (struct tree_node *node, int index) {
+struct tree_node* treenode_remove_child (struct tree_node *node, Int32 index) {
 	if (!node)
 		return NULL;
 	if (index < 0 || index >= node->child_count)
@@ -120,7 +120,7 @@ struct tree_node* treenode_get_left_sibling (struct tree_node *node) {
 	if (!node->parent)
 		return NULL;
 
-	int index = treenode_get_child_index(node->parent, node);
+	Int32 index = treenode_get_child_index(node->parent, node);
 	return treenode_get_child(node->parent,index - 1);
 }
 
@@ -130,7 +130,7 @@ struct tree_node* treenode_get_right_sibling (struct tree_node *node) {
 	if (!node->parent)
 		return NULL;
 
-	int index = treenode_get_child_index(node->parent, node);
+	Int32 index = treenode_get_child_index(node->parent, node);
 	return treenode_get_child(node->parent,index + 1);
 }
 
@@ -154,7 +154,7 @@ Boolean treenode_equal_node (struct tree_node *n1, struct tree_node *n2) {
 	return ret;
 }
 
-Int32 treenode_free_node (struct tree_node *node){
+Int32 treenode_free_node (struct tree_node *node) {
 	if (!node)
 		return 0;
 
@@ -171,12 +171,12 @@ Int32 treenode_free_node (struct tree_node *node){
 	return ret;
 }
 
-Int32 treenode_get_node_depth (struct tree_node *node, Int32 depth){
+Int32 treenode_get_node_largest_depth (struct tree_node *node, Int32 depth) {
 	if (!node)
 		return depth;
 	Int32 i,ret = depth;
 	for (i = 0; i < node->child_count; ++i) {
-		Int32 new_ret = treenode_get_node_depth(node->childs[i],depth + 1);
+		Int32 new_ret = treenode_get_node_largest_depth(node->childs[i],depth + 1);
 		if (new_ret > ret)
 			ret = new_ret;
 	}
@@ -184,11 +184,11 @@ Int32 treenode_get_node_depth (struct tree_node *node, Int32 depth){
 	return ret;
 }
 
-Int32 treenode_get_node_width (struct tree_node *node){
+Int32 treenode_get_node_width (struct tree_node *node) {
 	return -1;
 }
 
-Int32 treenode_get_nodes_count (struct tree_node *node){
+Int32 treenode_get_nodes_count (struct tree_node *node) {
 	if (!node)
 		return 0;
 	Int32 ret = 1,i;
@@ -213,7 +213,7 @@ Int32 treenode_depth_priority_traverse (struct tree_node *node, Int32 (*visit) (
 	return 1;
 }
 
-Int32 treenode_width_priority_traverse (struct tree_node *node, Int32 (*visit) (struct tree_node*)){
+Int32 treenode_width_priority_traverse (struct tree_node *node, Int32 (*visit) (struct tree_node*)) {
 	if (!node)
 		return -1;
 
@@ -228,4 +228,68 @@ Int32 treenode_width_priority_traverse (struct tree_node *node, Int32 (*visit) (
 			return -1;
 	}
 	return 1;
+}
+
+Int32 treenode_get_node_distance (struct tree_node *n1, struct tree_node *n2) {
+	Int32 ret = -1;
+	struct tree_node *parent = treenode_get_nearest_parent(n1,n2);
+	if (!parent)
+		return ret;
+	int depth_parent = treenode_get_node_depth(parent);
+	int depth_n1 = treenode_get_node_depth(n1);
+	int depth_n2 = treenode_get_node_depth(n2);
+	ret = depth_n1 - depth_parent + depth_n2 - depth_parent;
+	return ret;
+}
+
+Boolean treenode_is_parent_of (struct tree_node *n1, struct tree_node *n2) {
+	if (!n2)
+		return false;
+	struct tree_node *parent = n2->parent;
+	while (parent) {
+		if (treenode_equal_node(parent,n1)) {
+			return true;
+		}
+		parent = parent->parent;
+	}
+	return false;
+}
+
+Boolean treenode_is_child_of (struct tree_node *n1, struct tree_node *n2) {
+	return treenode_is_parent_of(n2,n1);
+}
+
+struct tree_node* treenode_get_nearest_parent (struct tree_node *n1, struct tree_node *n2) {
+	if (treenode_is_parent_of(n1,n2))
+		return n1;
+	if (treenode_is_parent_of(n2,n1))
+		return n2;
+
+	if (!n1 || !n2)
+		return NULL;
+
+	struct tree_node *p1 = n1->parent, *p2 = n2->parent;
+	while (p1) {
+		while(p2) {
+			if (treenode_equal_node(p1,p2))
+				return p1;
+			p2 = p2->parent;
+		}
+		p1 = p1->parent;
+	}
+	return NULL;
+}
+
+Int32 treenode_get_node_depth (struct tree_node *node) {
+	if (!node)
+		return -1;
+	Int32 ret = 0;
+	struct tree_node *p = node->parent;
+	if (!p)
+		return ret;
+	while(p) {
+		p = p->parent;
+		++ret;
+	}
+	return ret;
 }

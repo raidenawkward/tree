@@ -81,16 +81,26 @@ static Int32 traverse_for_depth(struct tree_node *node,Int32 depth) {
 Int32 tree_tree_depth (struct Tree *tree) {
 	Int32 ret = 0;
 	if (!tree)
-		return ret;
+		return -1;
 	if (!tree->root)
 		return ret;
 
 	if (tree->node_opera)
-		ret = tree->node_opera->get_node_depth(tree->root,0);
+		ret = tree->node_opera->get_node_largest_depth(tree->root,0);
 	else
 		ret = traverse_for_depth(tree->root,0);
 
 	return ret;
+}
+
+Int32 tree_tree_width(struct Tree *tree) {
+	if (!tree)
+		return -1;
+	if (!tree->node_opera)
+		return -1;
+	if (!tree->root)
+		return 0;
+	return tree->node_opera->get_node_width(tree->root);
 }
 
 static Int32 get_node_child_nodes(struct tree_node *node) {
