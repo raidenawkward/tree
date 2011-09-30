@@ -1,1 +1,28 @@
 LINK TREE STRUCT
+
+* presented by Raiden Awkward <raiden.ht@gmail.com>
+
+LICENSE: All source codes are provided under the terms of GNU GPL license, version 2
+
+WARNING: Some of the source codes may contains errors, and may lead to different results on different kind of machines
+
+
+
+* basic tree structs and operations;
+* root node is nodes with NULL parent;
+* link struct used between parent and child nodes;
+* only childs and their parents can be visited directly;
+* max num of childs limit only in Tree struct;
+* linear struct used between nodes and their siblings;
+* operations provided for Tree struct and tree node struct separately;
+
+
+
+tree_define.h		-		definations of data types;
+tree.h				-		definations of struct Tree and its operations;
+tree_node.h			-		definations of struct tree_node and its operations;
+
+tree_operation.h	-		functions for producing function implementations for struct Tree and tree_node;
+tree_base.h			-		default implementations for tree operations;
+tree_node_base.h	-		default implementations for tree node operations;
+
