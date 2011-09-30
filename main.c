@@ -51,7 +51,18 @@ int main(int argc, char** argv) {
 	node_op->append_child(n3,n5);
 	node_op->append_child(n3,n6);
 //	tree->root = NULL;
-
+#if 1
+	struct tree_node **ret_nodes;
+	Int32 depth = 0;
+	Int32 count = tree_op->depth_nodes(tree,depth,&ret_nodes);
+	printf("childs count of depth %d : %d\n",depth,count);
+	printf("they are : \n");
+	Int32 i;
+	for (i = 0; i < count; ++i) {
+		printf("%c\n",ret_nodes[i]->data);
+	}
+#endif
+#if 0
 	printf("%d nodes saved\n",tree_op->save(tree,"./save.tree"));
 
 	struct Tree *tree2;
@@ -59,7 +70,6 @@ int main(int argc, char** argv) {
 
 	printf("childs of root 1 : %d\n",node_op->child_count(tree->root));
 	printf("childs of root 2 : %d\n",node_op->child_count(tree2->root));
-#if 1
 	printf("traverse t1 : \n");
 	tree_op->traverse(tree,TREE_TRAVERSE_DEPTHPRIORITY,print_node);
 	printf("\ntraverse t2 : \n");

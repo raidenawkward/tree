@@ -321,11 +321,50 @@ done:
 	return ret;
 }
 
-Int32 depth_nodes (struct Tree *tree, Int32 depth, struct tree_node **ret) {
-	return 0;
+static Int32 depth_nodes_private(struct tree_node *node, Int32 current_depth, Int32 target_depth, struct tree_node ***ret_ptr, Int32 *ret_count) {
+	if (!node || current_depth > target_depth)
+		return 0;
+
+	if (current_depth == target_depth) {
+		struct tree_node **new_ptr;
+		if (*ret_count <= 0) {
+			*ret_count = 0;
+			new_ptr = (struct tree_node**)malloc(sizeof(struct tree_node*));
+		} else
+			new_ptr = (struct tree_node**)realloc(*ret_ptr,sizeof(struct tree_node*) * ((*ret_count) + 1));
+
+		if (new_ptr) {
+			++ (*ret_count);
+			*ret_ptr = new_ptr;
+			(*ret_ptr)[(*ret_count) - 1] = (struct tree_node*)malloc(sizeof(struct tree_node*));
+			if ((*ret_ptr)[(*ret_count) - 1]) {
+				(*ret_ptr)[(*ret_count) - 1] = node;
+			} else {
+				--(*ret_count);
+			}
+		}
+	} else if (current_depth < target_depth) {
+		Int32 i;
+		for (i = 0; i < node->child_count; ++i) {
+			depth_nodes_private(node->childs[i], current_depth + 1, target_depth, ret_ptr, ret_count);
+		}
+	}
+
+	return 1;
 }
 
-Boolean append_child (struct Tree *tree, struct tree_node *node, struct tree_node *child) {
+Int32 tree_depth_nodes (struct Tree *tree, Int32 depth, struct tree_node ***ret) {
+	if (!tree)
+		return 0;
+	if (!tree->root)
+		return 0;
+	Int32 ret_count = 0;
+	depth_nodes_private(tree->root,0,depth,ret,&ret_count);
+
+	return ret_count;
+}
+
+Boolean tree_append_child (struct Tree *tree, struct tree_node *node, struct tree_node *child) {
 	if (!tree || !node)
 		return false;
 
@@ -340,7 +379,7 @@ Boolean append_child (struct Tree *tree, struct tree_node *node, struct tree_nod
 	return tree->node_opera->append_child(node,child);
 }
 
-Boolean insert_child (struct Tree *tree, struct tree_node *node, Int32 index, struct tree_node *child) {
+Boolean tree_insert_child (struct Tree *tree, struct tree_node *node, Int32 index, struct tree_node *child) {
 	if (!tree || !node)
 		return false;
 

@@ -15,6 +15,9 @@ struct tree_operations* tree_get_operation() {
 	op->root_of_tree = tree_root_of_tree;
 	op->save = tree_save;
 	op->load = tree_load;
+	op->depth_nodes = tree_depth_nodes;
+	op->insert_child = tree_insert_child;
+	op->append_child = tree_append_child;
 	
 	return op;
 }
