@@ -54,8 +54,10 @@ int main(int argc, char** argv) {
 #if 1
 	struct tree_node **ret_nodes;
 	Int32 depth = 0;
-	Int32 count = tree_op->depth_nodes(tree,depth,&ret_nodes);
-	printf("childs count of depth %d : %d\n",depth,count);
+//	Int32 count = tree_op->depth_nodes(tree,depth,&ret_nodes);
+	Int32 count = tree_op->terminative_nodes(tree,&ret_nodes);
+//	printf("childs count of depth %d : %d\n",depth,count);
+	printf("childs count of terminator %d\n",count);
 	printf("they are : \n");
 	Int32 i;
 	for (i = 0; i < count; ++i) {

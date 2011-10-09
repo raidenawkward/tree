@@ -364,6 +364,49 @@ Int32 tree_depth_nodes (struct Tree *tree, Int32 depth, struct tree_node ***ret)
 	return ret_count;
 }
 
+Int32 terminative_nodes_private(struct tree_node *node, struct tree_node ***ret_ptr, Int32 *ret_count) {
+	if (!node)
+		return -1;
+	if (node->child_count <= 0 || !node->childs) { // hit
+		struct tree_node **new_ptr = NULL;
+		if (*ret_count <= 0) {
+			*ret_count = 0;
+			new_ptr = (struct tree_node**)malloc(sizeof(struct tree_node*));
+		} else {
+			new_ptr = (struct tree_node**)realloc(*ret_ptr,sizeof(struct tree_node*) * (*ret_count + 1));
+		}
+
+		if (new_ptr) {
+			++ *ret_count;
+			*ret_ptr = new_ptr;
+			(*ret_ptr)[(*ret_count) - 1] = (struct tree_node*)malloc(sizeof(struct tree_node*));
+			if ((*ret_ptr)[(*ret_count) - 1]) {
+                (*ret_ptr)[(*ret_count) - 1] = node;
+            } else {
+               --(*ret_count);
+            }
+		}
+		return 1;
+	} else {
+		Int32 i;
+		for (i = 0; i < node->child_count; ++i) {
+			terminative_nodes_private(node->childs[i],ret_ptr,ret_count);
+		}
+	}
+	return 0;
+}
+
+Int32 tree_terminative_nodes (struct Tree *tree, struct tree_node ***ret) {
+	if (!tree)
+		return 0;
+	if (!tree->root)
+		return 0;
+
+	Int32 ret_count = 0;
+	terminative_nodes_private(tree->root,ret,&ret_count);
+	return ret_count;
+}
+
 Boolean tree_append_child (struct Tree *tree, struct tree_node *node, struct tree_node *child) {
 	if (!tree || !node)
 		return false;

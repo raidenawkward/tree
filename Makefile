@@ -20,5 +20,3 @@ ar:$(OBJS)
 	ar -r $(TAR_ALIB) $(OBJS)
 clean:
 	rm -f $(OBJS) $(TAR_EXEC) $(TAR_LIB) $(TAR_ALIB)
-dist clean:
-	rm -f $(OBJS) $(TAR_EXEC) $(TAR_LIB) $(TAR_ALIB)

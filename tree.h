@@ -27,6 +27,7 @@ struct tree_operations {
 	Int32 (*save) (struct Tree *tree, const Char* file); /// save tree to file, returns nodes count that have been saved
 	Int32 (*load) (struct Tree **tree, const Char* file); /// load tree struct from file to tree, returns nodes count that have been loaded
 	Int32 (*depth_nodes) (struct Tree *tree, Int32 depth, struct tree_node ***ret); /// returns nodes and nodes count of tree with specified depth in left->right order
+	Int32 (*terminative_nodes) (struct Tree *tree, struct tree_node ***ret); /// returns nodes and nodes count of tree with max depth of every branch in left->right order
 	Boolean (*append_child) (struct Tree *tree, struct tree_node *node, struct tree_node *child);
 	Boolean (*insert_child) (struct Tree *tree, struct tree_node *node, Int32 index, struct tree_node *child);
 };
