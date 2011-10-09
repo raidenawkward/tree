@@ -1,6 +1,7 @@
 NAME := tree
 
-CFLAGS += -g
+#CFLAGS += -g
+
 SRC := $(shell ls ./*.c)
 OBJS := $(SRC:.c=.o)
 
