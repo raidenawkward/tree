@@ -130,7 +130,7 @@ Int32 tree_node_count (struct Tree *tree) {
 }
 
 static Int32 depth_priority_traverse(struct tree_node *node, Int32 (*visit) (struct tree_node*)) {
-	if (!node)
+	if (!node || !visit)
 		return -1;
 	Int32 i;
 
@@ -145,7 +145,7 @@ static Int32 depth_priority_traverse(struct tree_node *node, Int32 (*visit) (str
 }
 
 static Int32 width_priority_traverse(struct tree_node *node, Int32 (*visit) (struct tree_node*)) {
-	if (!node)
+	if (!node || !visit)
 		return -1;
 
 	Int32 i;
@@ -159,6 +159,63 @@ static Int32 width_priority_traverse(struct tree_node *node, Int32 (*visit) (str
 			return -1;
 	}
 	return 1;
+}
+
+static void route_traverse(struct Tree *tree, Int32 (*visit) (struct tree_node *)) {
+	if (!tree || !visit)
+		return;
+	if (!tree->root)
+		return;
+
+	struct tree_node **term_nodes, **path_nodes = NULL;
+	Int32 path_length = 0;
+	Int32 term_count = tree_terminative_nodes(tree,&term_nodes);
+	Int32 i;
+	struct tree_node *cur_node = NULL;
+
+	for (i = 0; i < term_count; ++i) {
+		cur_node = term_nodes[i];
+		while (cur_node) {
+			if (!path_length) {
+				path_nodes = (struct tree_node**)malloc(sizeof(struct tree_node*));
+				if (!path_nodes)
+					goto done;
+			} else {
+				struct tree_node **new_ptr = (struct tree_node**)realloc(path_nodes,sizeof(struct tree_node*) * (path_length + 1));
+				if (!path_nodes)
+					goto done;
+				path_nodes = new_ptr;
+			}
+			++ path_length;
+			path_nodes[path_length - 1] = (struct tree_node*)malloc(sizeof(struct tree_node*));
+			if (!path_nodes[path_length - 1])
+				goto done;
+			path_nodes[path_length - 1] = cur_node;
+			cur_node = cur_node->parent;
+		} // while
+
+		Int32 j;
+		for (j = path_length - 1; j >= 0; --j) {
+			if (!visit(path_nodes[j])) {
+				break;
+			}
+		}
+#if 0 // +_+
+		for (j = 0; j < path_length; ++j) {
+			free(path_nodes[j]);
+		}
+#endif
+		path_length = 0;
+		free(path_nodes);
+	} // for
+
+done:
+#if 0 // +_+
+	for (i = 0; i < term_count; ++i) {
+		free(term_nodes[i]);
+	}
+#endif
+	free(term_nodes);
 }
 
 void tree_traverse (struct Tree *tree, tree_traverse_t type, Int32 (*visit) (struct tree_node*)) {
@@ -180,6 +237,9 @@ void tree_traverse (struct Tree *tree, tree_traverse_t type, Int32 (*visit) (str
 			tree->node_opera->width_priority_traverse(tree->root,visit);
 		else
 			width_priority_traverse(tree->root,visit);
+		break;
+	case TREE_TRAVERSE_ROUTE:
+		route_traverse(tree,visit);
 		break;
 	default:
 		break;

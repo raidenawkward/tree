@@ -28,6 +28,7 @@ typedef enum {
 	////////////////////////////
 	TREE_TRAVERSE_DEPTHPRIORITY,
 	TREE_TRAVERSE_WIDTHPRIORITY,
+	TREE_TRAVERSE_ROUTE, /// traverse every branch from root node
 	TREE_TRAVERSE_OTHERORDER
 } tree_traverse_t;
 
