@@ -15,6 +15,7 @@ static Int32 print_node (struct tree_node* node) {
 }
 
 int main(int argc, char** argv) {
+#if 0
 	struct tree_operations *tree_op = tree_get_operation();
 	struct tree_node_operations *node_op = treenode_get_operation();
 
@@ -50,7 +51,8 @@ int main(int argc, char** argv) {
 	node_op->append_child(n2,n4);
 	node_op->append_child(n3,n5);
 	node_op->append_child(n3,n6);
-#if 1
+#endif
+#if 0
 	tree_op->traverse(tree,TREE_TRAVERSE_ROUTE,print_node);
 	tree_op->traverse(tree,TREE_TRAVERSE_ROUTE,print_node);
 #endif
@@ -103,7 +105,9 @@ int main(int argc, char** argv) {
 	printf("clear tree , %d nodes were free\n",tree_op->clear(&tree));
 	printf("after clear, count of tree is :%d\n",tree_op->node_count(tree));
 #endif
+#if 0
 	tree_op->destory(&tree);
+#endif
 #if 0
 	Int32 i;
 	for (i = 0; i < node_op->child_count(n1); ++i) {

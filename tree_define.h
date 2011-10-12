@@ -2,6 +2,7 @@
 #define _TREE_DEFINE_H
 
 #include <stdio.h>
+#include "fomula_seeker_define.h"
 
 typedef enum {
 	false = 0,
@@ -19,8 +20,13 @@ typedef enum {
 } tree_type_t;
 
 
-typedef UChar TreeElement;
+struct assist_tree_element {
+    struct used_set *num_used_set;
+    struct used_set *operator_used_set;
+	UChar data;
+};
 
+typedef struct assist_tree_element TreeElement;
 
 typedef enum {
 	TREE_TRAVERSE_PREORDER =0,

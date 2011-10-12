@@ -148,8 +148,10 @@ Boolean treenode_equal_node (struct tree_node *n1, struct tree_node *n2) {
 		return ret;
 	if (n1->child_count != n2->child_count)
 		return ret;
+#if 0
 	if (n1->data != n2->data)
 		return ret;
+#endif
 	if (n1->childs != n2->childs)
 		return ret;
 
