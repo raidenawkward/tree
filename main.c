@@ -8,7 +8,7 @@
 
 static Int32 print_node (struct tree_node* node) {
 	if (node) {
-		printf("node : %c\n",node->data);
+		printf("node : %c\n",node->data.data);
 		return 1;
 	} else
 		return -1;
