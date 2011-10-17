@@ -103,7 +103,6 @@ int main(int argc, char** argv) {
 	printf("clear tree , %d nodes were free\n",tree_op->clear(&tree));
 	printf("after clear, count of tree is :%d\n",tree_op->node_count(tree));
 #endif
-	tree_op->destory(&tree);
 #if 0
 	Int32 i;
 	for (i = 0; i < node_op->child_count(n1); ++i) {
@@ -124,5 +123,8 @@ int main(int argc, char** argv) {
 	printf("r sibling of n3 : %c\n",node_op->get_right_sibling(n3)->data);
 	printf("root of  n4 : %c\n",node_op->get_root(n4)->data);
 #endif
+	tree_op->destory(&tree);
+	free(tree_op);
+	free(node_op);
 	return 0;
 }

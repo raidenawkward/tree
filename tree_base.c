@@ -19,8 +19,10 @@ Boolean tree_create (struct Tree **tree, tree_type_t type) {
 	return true;
 }
 
+static void tree_nodes_destory(struct Tree **tree);
+
 void tree_destory (struct Tree **tree) {
-	tree_clear(tree);
+	tree_nodes_destory(tree);
 	if (*tree)
 		free(*tree);
 }
@@ -42,16 +44,26 @@ static Int32 free_tree_node(struct tree_node *node) {
 	return ret;
 }
 
-Int32 tree_clear (struct Tree **tree) {
-	Int32 ret = 0;
+void tree_nodes_destory (struct Tree **tree) {
 	if (!tree || !(*tree))
-		return ret;
+		return;
 	if (!(*tree)->root)
-		return ret;
+		return;
 	if ((*tree)->node_opera)
-		ret = (*tree)->node_opera->free_node((*tree)->root);
-	else
-		ret = free_tree_node((*tree)->root);
+		if ((*tree)->node_opera->free_nodes)
+			(*tree)->node_opera->free_nodes((*tree)->root);
+	(*tree)->root = NULL;
+}
+
+Int32 tree_clear (struct Tree **tree) {
+	if (!tree || !(*tree))
+		return 0;
+	if (!(*tree)->node_opera)
+		return 0;
+	if (!(*tree)->node_opera->child_count)
+		return 0;
+
+	Int32 ret = (*tree)->node_opera->child_count((*tree)->root);
 	(*tree)->root = NULL;
 	return ret;
 }

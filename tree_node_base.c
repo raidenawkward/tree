@@ -1,5 +1,10 @@
 #include "tree_node_base.h"
 
+struct tree_node* treenode_create() {
+	struct tree_node *new_node = (struct tree_node*)malloc(sizeof(struct tree_node));
+	return new_node;
+}
+
 struct tree_node* treenode_get_root (struct tree_node* node) {
 	if (!node)
 		return NULL;
@@ -90,7 +95,7 @@ Int32 treenode_get_child_index (struct tree_node *node, struct tree_node *child)
 	Int32 i;
 	for (i = 0; i < node->child_count; ++i) {
 		struct tree_node *n = node->childs[i];
-		if (treenode_equal_node(n,child)) {
+		if (treenode_equal_nodes(n,child)) {
 			ret = i;
 			break;
 		}
@@ -134,30 +139,26 @@ struct tree_node* treenode_get_right_sibling (struct tree_node *node) {
 	return treenode_get_child(node->parent,index + 1);
 }
 
-Boolean treenode_equal_node (struct tree_node *n1, struct tree_node *n2) {
-	Boolean ret = false;
+Boolean treenode_equal_nodes (struct tree_node *n1, struct tree_node *n2) {
 	if (!n1 || !n2) {
 		if (n1 == n2)
 			return true;
-		return ret;
+		return false;
 	}
 
 	if (n1->flag != n2->flag)
-		return ret;
+		return false;
 	if (n1->parent != n2->parent)
-		return ret;
+		return false;
 	if (n1->child_count != n2->child_count)
-		return ret;
+		return false;
 	if (n1->data != n2->data)
-		return ret;
-	if (n1->childs != n2->childs)
-		return ret;
+		return false;
 
-	ret = true;
-	return ret;
+	return true;
 }
 
-Int32 treenode_free_node (struct tree_node *node) {
+Int32 treenode_free_nodes (struct tree_node *node) {
 	if (!node)
 		return 0;
 
@@ -165,7 +166,7 @@ Int32 treenode_free_node (struct tree_node *node) {
 
 	for (i = 0; i < node->child_count; ++i) {
 		struct tree_node *child = node->childs[i];
-		ret += treenode_free_node(child);
+		ret += treenode_free_nodes(child);
 	}
 	for (i = 0; i < node->child_count; ++i) {
 		free(node->childs[i]);
@@ -250,7 +251,7 @@ Boolean treenode_is_parent_of (struct tree_node *n1, struct tree_node *n2) {
 		return false;
 	struct tree_node *parent = n2->parent;
 	while (parent) {
-		if (treenode_equal_node(parent,n1)) {
+		if (treenode_equal_nodes(parent,n1)) {
 			return true;
 		}
 		parent = parent->parent;
@@ -274,7 +275,7 @@ struct tree_node* treenode_get_nearest_parent (struct tree_node *n1, struct tree
 	struct tree_node *p1 = n1->parent, *p2 = n2->parent;
 	while (p1) {
 		while(p2) {
-			if (treenode_equal_node(p1,p2))
+			if (treenode_equal_nodes(p1,p2))
 				return p1;
 			p2 = p2->parent;
 		}
