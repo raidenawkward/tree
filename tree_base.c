@@ -19,32 +19,7 @@ Boolean tree_create (struct Tree **tree, tree_type_t type) {
 	return true;
 }
 
-static void tree_nodes_destory(struct Tree **tree);
-
-void tree_destory (struct Tree **tree) {
-	tree_nodes_destory(tree);
-	if (*tree)
-		free(*tree);
-}
-
-static Int32 free_tree_node(struct tree_node *node) {
-	if (!node)
-		return 0;
-
-	Int32 ret = 1,i;
-
-	for (i = 0; i < node->child_count; ++i) {
-		struct tree_node *child = node->childs[i];
-		ret += free_tree_node(child);
-	}
-	for (i = 0; i < node->child_count; ++i) {
-		free(node->childs[i]);
-	}
-	node->child_count = 0;
-	return ret;
-}
-
-void tree_nodes_destory (struct Tree **tree) {
+static void tree_nodes_destory (struct Tree **tree) {
 	if (!tree || !(*tree))
 		return;
 	if (!(*tree)->root)
@@ -53,6 +28,12 @@ void tree_nodes_destory (struct Tree **tree) {
 		if ((*tree)->node_opera->free_nodes)
 			(*tree)->node_opera->free_nodes((*tree)->root);
 	(*tree)->root = NULL;
+}
+
+void tree_destory (struct Tree **tree) {
+	tree_nodes_destory(tree);
+	if (*tree)
+		free(*tree);
 }
 
 Int32 tree_clear (struct Tree **tree) {
@@ -118,16 +99,6 @@ Int32 tree_tree_width(struct Tree *tree) {
 	return tree->node_opera->get_node_width(tree->root);
 }
 
-static Int32 get_node_child_nodes(struct tree_node *node) {
-	if (!node)
-		return 0;
-	Int32 ret = 1,i;
-	for (i = 0; i < node->child_count; ++i) {
-		ret += get_node_child_nodes(node->childs[i]);
-	}
-	return ret;
-}
-
 Int32 tree_node_count (struct Tree *tree) {
 	Int32 ret = 0;
 	if (!tree)
@@ -135,42 +106,9 @@ Int32 tree_node_count (struct Tree *tree) {
 	if (!tree->root)
 		return ret;
 	if (tree->node_opera)
-		ret = tree->node_opera->get_nodes_count(tree->root);
-	else
-		ret = get_node_child_nodes(tree->root);
+		if (tree->node_opera->get_nodes_count)
+			ret = tree->node_opera->get_nodes_count(tree->root);
 	return ret;
-}
-
-static Int32 depth_priority_traverse(struct tree_node *node, Int32 (*visit) (struct tree_node*)) {
-	if (!node || !visit)
-		return -1;
-	Int32 i;
-
-	if (visit(node) < 0)
-		return -1;
-
-	for (i = 0; i < node->child_count; ++i) {
-		if (depth_priority_traverse(node->childs[i],visit) < 0)
-			return -1;
-	}
-	return 1;
-}
-
-static Int32 width_priority_traverse(struct tree_node *node, Int32 (*visit) (struct tree_node*)) {
-	if (!node || !visit)
-		return -1;
-
-	Int32 i;
-	for (i = 0; i < node->child_count; ++i) {
-		if (visit(node->childs[i]) < 0)
-			return -1;
-	}
-
-	for (i = 0; i < node->child_count; ++i) {
-		if (width_priority_traverse(node->childs[i], visit) < 0)
-			return -1;
-	}
-	return 1;
 }
 
 static void route_traverse(struct Tree *tree, Int32 (*visit) (struct tree_node *)) {
@@ -238,17 +176,15 @@ void tree_traverse (struct Tree *tree, tree_traverse_t type, Int32 (*visit) (str
 	switch (type) {
 	case TREE_TRAVERSE_DEPTHPRIORITY:
 		if (tree->node_opera)
-			tree->node_opera->depth_priority_traverse(tree->root,visit);
-		else
-			depth_priority_traverse(tree->root,visit);
+			if(tree->node_opera->depth_priority_traverse)
+				tree->node_opera->depth_priority_traverse(tree->root,visit);
 		break;
 	case TREE_TRAVERSE_WIDTHPRIORITY:
 		if (!visit(tree->root))
 			return;
 		if (tree->node_opera)
-			tree->node_opera->width_priority_traverse(tree->root,visit);
-		else
-			width_priority_traverse(tree->root,visit);
+			if (tree->node_opera->width_priority_traverse)
+				tree->node_opera->width_priority_traverse(tree->root,visit);
 		break;
 	case TREE_TRAVERSE_ROUTE:
 		route_traverse(tree,visit);
