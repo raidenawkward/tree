@@ -344,12 +344,7 @@ static Int32 depth_nodes_private(struct tree_node *node, Int32 current_depth, In
 		if (new_ptr) {
 			++ (*ret_count);
 			*ret_ptr = new_ptr;
-			(*ret_ptr)[(*ret_count) - 1] = (struct tree_node*)malloc(sizeof(struct tree_node*));
-			if ((*ret_ptr)[(*ret_count) - 1]) {
-				(*ret_ptr)[(*ret_count) - 1] = node;
-			} else {
-				--(*ret_count);
-			}
+			(*ret_ptr)[(*ret_count) - 1] = node;
 		}
 	} else if (current_depth < target_depth) {
 		Int32 i;
@@ -387,12 +382,7 @@ Int32 terminative_nodes_private(struct tree_node *node, struct tree_node ***ret_
 		if (new_ptr) {
 			++ *ret_count;
 			*ret_ptr = new_ptr;
-			(*ret_ptr)[(*ret_count) - 1] = (struct tree_node*)malloc(sizeof(struct tree_node*));
-			if ((*ret_ptr)[(*ret_count) - 1]) {
-                (*ret_ptr)[(*ret_count) - 1] = node;
-            } else {
-               --(*ret_count);
-            }
+			(*ret_ptr)[(*ret_count) - 1] = node;
 		}
 		return 1;
 	} else {

@@ -50,12 +50,12 @@ int main(int argc, char** argv) {
 	node_op->append_child(n2,n4);
 	node_op->append_child(n3,n5);
 	node_op->append_child(n3,n6);
-#if 1
+#if 0
 	tree_op->traverse(tree,TREE_TRAVERSE_ROUTE,print_node);
 	tree_op->traverse(tree,TREE_TRAVERSE_ROUTE,print_node);
 #endif
 //	tree->root = NULL;
-#if 0
+#if 1
 	struct tree_node **ret_nodes;
 	Int32 depth = 0;
 //	Int32 count = tree_op->depth_nodes(tree,depth,&ret_nodes);
