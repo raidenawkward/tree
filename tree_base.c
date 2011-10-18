@@ -117,7 +117,7 @@ static void route_traverse(struct Tree *tree, Int32 (*visit) (struct tree_node *
 	if (!tree->root)
 		return;
 
-	struct tree_node **term_nodes, **path_nodes = NULL;
+	struct tree_node **term_nodes, **path_nodes;
 	Int32 path_length = 0;
 	Int32 term_count = tree_terminative_nodes(tree,&term_nodes);
 	Int32 i;
@@ -128,18 +128,20 @@ static void route_traverse(struct Tree *tree, Int32 (*visit) (struct tree_node *
 		while (cur_node) {
 			if (!path_length) {
 				path_nodes = (struct tree_node**)malloc(sizeof(struct tree_node*));
-				if (!path_nodes)
-					goto done;
+				if (!path_nodes) {
+					free(term_nodes);
+					return;
+				}
 			} else {
 				struct tree_node **new_ptr = (struct tree_node**)realloc(path_nodes,sizeof(struct tree_node*) * (path_length + 1));
-				if (!path_nodes)
-					goto done;
+				if (!path_nodes) {
+					free(term_nodes);
+					free(path_nodes);
+					return;
+				}
 				path_nodes = new_ptr;
 			}
 			++ path_length;
-			path_nodes[path_length - 1] = (struct tree_node*)malloc(sizeof(struct tree_node*));
-			if (!path_nodes[path_length - 1])
-				goto done;
 			path_nodes[path_length - 1] = cur_node;
 			cur_node = cur_node->parent;
 		} // while
@@ -150,21 +152,10 @@ static void route_traverse(struct Tree *tree, Int32 (*visit) (struct tree_node *
 				break;
 			}
 		}
-#if 0 // +_+
-		for (j = 0; j < path_length; ++j) {
-			free(path_nodes[j]);
-		}
-#endif
 		path_length = 0;
 		free(path_nodes);
 	} // for
 
-done:
-#if 0 // +_+
-	for (i = 0; i < term_count; ++i) {
-		free(term_nodes[i]);
-	}
-#endif
 	free(term_nodes);
 }
 
