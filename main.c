@@ -50,7 +50,7 @@ int main(int argc, char** argv) {
 	node_op->append_child(n3,n5);
 	node_op->append_child(n3,n6);
 #endif
-#if 0
+#if 1
 	tree_op->traverse(tree,TREE_TRAVERSE_ROUTE,print_node);
 	tree_op->traverse(tree,TREE_TRAVERSE_ROUTE,print_node);
 #endif

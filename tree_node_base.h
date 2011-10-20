@@ -34,6 +34,7 @@ struct tree_node* treenode_get_left_sibling (struct tree_node *node);
 struct tree_node* treenode_get_right_sibling (struct tree_node *node);
 /// compare tree nodes content from different addrs
 Boolean treenode_equal_nodes (struct tree_node *n1, struct tree_node *n2);
+Boolean treenode_equal_node_data (TreeElement d1, TreeElement d2);
 /// free node and its childs
 Int32 treenode_free_nodes (struct tree_node *root);
 /// get depth of node

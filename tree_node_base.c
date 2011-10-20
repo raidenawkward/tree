@@ -139,6 +139,10 @@ struct tree_node* treenode_get_right_sibling (struct tree_node *node) {
 	return treenode_get_child(node->parent,index + 1);
 }
 
+Boolean treenode_equal_node_data (TreeElement d1, TreeElement d2) {
+	return d1 == d2;
+}
+
 Boolean treenode_equal_nodes (struct tree_node *n1, struct tree_node *n2) {
 	if (!n1 || !n2) {
 		if (n1 == n2)
@@ -152,7 +156,7 @@ Boolean treenode_equal_nodes (struct tree_node *n1, struct tree_node *n2) {
 		return false;
 	if (n1->child_count != n2->child_count)
 		return false;
-	if (n1->data != n2->data)
+	if (!treenode_equal_node_data(n1->data, n2->data))
 		return false;
 
 	return true;

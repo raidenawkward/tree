@@ -29,6 +29,7 @@ struct tree_node_operations {
 	struct tree_node* (*get_left_sibling) (struct tree_node *node);
 	struct tree_node* (*get_right_sibling) (struct tree_node *node);
 	Boolean (*equal_nodes) (struct tree_node *n1, struct tree_node *n2);
+	Boolean (*equal_node_data) (TreeElement d1, TreeElement d2);
 
 	Int32 (*free_nodes) (struct tree_node *root); /// free node and its childs
 	Int32 (*get_node_largest_depth) (struct tree_node *node, Int32 base); /// get depth of node
