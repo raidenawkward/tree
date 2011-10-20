@@ -25,7 +25,7 @@ int main(int argc, char** argv) {
 	struct Tree *tree;
 	tree_op->create(&tree,TREE_TYPE_NORMAL);
 	tree->node_opera = node_op;
-
+#if 1
 	struct tree_node *n1 = (struct tree_node*)malloc(sizeof(struct tree_node));
 	n1->data = 'a';
 	n1->child_count = 0;
@@ -44,7 +44,6 @@ int main(int argc, char** argv) {
 	struct tree_node *n6 = (struct tree_node*)malloc(sizeof(struct tree_node));
 	n6->data = 'f';
 	n6->child_count = 0;
-
 	tree->root = n1;
 	node_op->append_child(n1,n2);
 	node_op->append_child(n1,n3);
@@ -106,9 +105,6 @@ int main(int argc, char** argv) {
 	printf("after clear, count of tree is :%d\n",tree_op->node_count(tree));
 #endif
 #if 0
-	tree_op->destory(&tree);
-#endif
-#if 0
 	Int32 i;
 	for (i = 0; i < node_op->child_count(n1); ++i) {
 		struct tree_node *node = node_op->get_child(n1,i);
@@ -128,5 +124,9 @@ int main(int argc, char** argv) {
 	printf("r sibling of n3 : %c\n",node_op->get_right_sibling(n3)->data);
 	printf("root of  n4 : %c\n",node_op->get_root(n4)->data);
 #endif
+	tree_op->destory(&tree);
+	free(tree_op);
+	free(node_op);
 	return 0;
+#endif
 }

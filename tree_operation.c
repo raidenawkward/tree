@@ -28,6 +28,7 @@ struct tree_node_operations* treenode_get_operation() {
 	if (!op)
 		return NULL;
 
+	op->create = treenode_create;
 	op->get_root = treenode_get_root;
 	op->get_parent = treenode_get_parent;
 	op->child_count = treenode_child_count;
@@ -40,8 +41,9 @@ struct tree_node_operations* treenode_get_operation() {
 	op->remove_child = treenode_remove_child;
 	op->get_left_sibling = treenode_get_left_sibling;
 	op->get_right_sibling = treenode_get_right_sibling;
-	op->equal_node = treenode_equal_node;
-	op->free_node = treenode_free_node;
+	op->equal_node_data = treenode_equal_node_data;
+	op->equal_nodes = treenode_equal_nodes;
+	op->free_nodes = treenode_free_nodes;
 	op->get_node_largest_depth = treenode_get_node_largest_depth;
 	op->get_node_width = treenode_get_node_width;
 	op->get_nodes_count = treenode_get_nodes_count;

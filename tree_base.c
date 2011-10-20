@@ -19,39 +19,32 @@ Boolean tree_create (struct Tree **tree, tree_type_t type) {
 	return true;
 }
 
+static void tree_nodes_destory (struct Tree **tree) {
+	if (!tree || !(*tree))
+		return;
+	if (!(*tree)->root)
+		return;
+	if ((*tree)->node_opera)
+		if ((*tree)->node_opera->free_nodes)
+			(*tree)->node_opera->free_nodes((*tree)->root);
+	(*tree)->root = NULL;
+}
+
 void tree_destory (struct Tree **tree) {
-	tree_clear(tree);
+	tree_nodes_destory(tree);
 	if (*tree)
 		free(*tree);
 }
 
-static Int32 free_tree_node(struct tree_node *node) {
-	if (!node)
+Int32 tree_clear (struct Tree **tree) {
+	if (!tree || !(*tree))
+		return 0;
+	if (!(*tree)->node_opera)
+		return 0;
+	if (!(*tree)->node_opera->child_count)
 		return 0;
 
-	Int32 ret = 1,i;
-
-	for (i = 0; i < node->child_count; ++i) {
-		struct tree_node *child = node->childs[i];
-		ret += free_tree_node(child);
-	}
-	for (i = 0; i < node->child_count; ++i) {
-		free(node->childs[i]);
-	}
-	node->child_count = 0;
-	return ret;
-}
-
-Int32 tree_clear (struct Tree **tree) {
-	Int32 ret = 0;
-	if (!tree || !(*tree))
-		return ret;
-	if (!(*tree)->root)
-		return ret;
-	if ((*tree)->node_opera)
-		ret = (*tree)->node_opera->free_node((*tree)->root);
-	else
-		ret = free_tree_node((*tree)->root);
+	Int32 ret = (*tree)->node_opera->child_count((*tree)->root);
 	(*tree)->root = NULL;
 	return ret;
 }
@@ -106,16 +99,6 @@ Int32 tree_tree_width(struct Tree *tree) {
 	return tree->node_opera->get_node_width(tree->root);
 }
 
-static Int32 get_node_child_nodes(struct tree_node *node) {
-	if (!node)
-		return 0;
-	Int32 ret = 1,i;
-	for (i = 0; i < node->child_count; ++i) {
-		ret += get_node_child_nodes(node->childs[i]);
-	}
-	return ret;
-}
-
 Int32 tree_node_count (struct Tree *tree) {
 	Int32 ret = 0;
 	if (!tree)
@@ -123,42 +106,9 @@ Int32 tree_node_count (struct Tree *tree) {
 	if (!tree->root)
 		return ret;
 	if (tree->node_opera)
-		ret = tree->node_opera->get_nodes_count(tree->root);
-	else
-		ret = get_node_child_nodes(tree->root);
+		if (tree->node_opera->get_nodes_count)
+			ret = tree->node_opera->get_nodes_count(tree->root);
 	return ret;
-}
-
-static Int32 depth_priority_traverse(struct tree_node *node, Int32 (*visit) (struct tree_node*)) {
-	if (!node || !visit)
-		return -1;
-	Int32 i;
-
-	if (visit(node) < 0)
-		return -1;
-
-	for (i = 0; i < node->child_count; ++i) {
-		if (depth_priority_traverse(node->childs[i],visit) < 0)
-			return -1;
-	}
-	return 1;
-}
-
-static Int32 width_priority_traverse(struct tree_node *node, Int32 (*visit) (struct tree_node*)) {
-	if (!node || !visit)
-		return -1;
-
-	Int32 i;
-	for (i = 0; i < node->child_count; ++i) {
-		if (visit(node->childs[i]) < 0)
-			return -1;
-	}
-
-	for (i = 0; i < node->child_count; ++i) {
-		if (width_priority_traverse(node->childs[i], visit) < 0)
-			return -1;
-	}
-	return 1;
 }
 
 static void route_traverse(struct Tree *tree, Int32 (*visit) (struct tree_node *)) {
@@ -167,7 +117,7 @@ static void route_traverse(struct Tree *tree, Int32 (*visit) (struct tree_node *
 	if (!tree->root)
 		return;
 
-	struct tree_node **term_nodes, **path_nodes = NULL;
+	struct tree_node **term_nodes, **path_nodes;
 	Int32 path_length = 0;
 	Int32 term_count = tree_terminative_nodes(tree,&term_nodes);
 	Int32 i;
@@ -178,18 +128,20 @@ static void route_traverse(struct Tree *tree, Int32 (*visit) (struct tree_node *
 		while (cur_node) {
 			if (!path_length) {
 				path_nodes = (struct tree_node**)malloc(sizeof(struct tree_node*));
-				if (!path_nodes)
-					goto done;
+				if (!path_nodes) {
+					free(term_nodes);
+					return;
+				}
 			} else {
 				struct tree_node **new_ptr = (struct tree_node**)realloc(path_nodes,sizeof(struct tree_node*) * (path_length + 1));
-				if (!path_nodes)
-					goto done;
+				if (!path_nodes) {
+					free(term_nodes);
+					free(path_nodes);
+					return;
+				}
 				path_nodes = new_ptr;
 			}
 			++ path_length;
-			path_nodes[path_length - 1] = (struct tree_node*)malloc(sizeof(struct tree_node*));
-			if (!path_nodes[path_length - 1])
-				goto done;
 			path_nodes[path_length - 1] = cur_node;
 			cur_node = cur_node->parent;
 		} // while
@@ -200,21 +152,10 @@ static void route_traverse(struct Tree *tree, Int32 (*visit) (struct tree_node *
 				break;
 			}
 		}
-#if 0 // +_+
-		for (j = 0; j < path_length; ++j) {
-			free(path_nodes[j]);
-		}
-#endif
 		path_length = 0;
 		free(path_nodes);
 	} // for
 
-done:
-#if 0 // +_+
-	for (i = 0; i < term_count; ++i) {
-		free(term_nodes[i]);
-	}
-#endif
 	free(term_nodes);
 }
 
@@ -226,17 +167,15 @@ void tree_traverse (struct Tree *tree, tree_traverse_t type, Int32 (*visit) (str
 	switch (type) {
 	case TREE_TRAVERSE_DEPTHPRIORITY:
 		if (tree->node_opera)
-			tree->node_opera->depth_priority_traverse(tree->root,visit);
-		else
-			depth_priority_traverse(tree->root,visit);
+			if(tree->node_opera->depth_priority_traverse)
+				tree->node_opera->depth_priority_traverse(tree->root,visit);
 		break;
 	case TREE_TRAVERSE_WIDTHPRIORITY:
 		if (!visit(tree->root))
 			return;
 		if (tree->node_opera)
-			tree->node_opera->width_priority_traverse(tree->root,visit);
-		else
-			width_priority_traverse(tree->root,visit);
+			if (tree->node_opera->width_priority_traverse)
+				tree->node_opera->width_priority_traverse(tree->root,visit);
 		break;
 	case TREE_TRAVERSE_ROUTE:
 		route_traverse(tree,visit);
@@ -396,12 +335,7 @@ static Int32 depth_nodes_private(struct tree_node *node, Int32 current_depth, In
 		if (new_ptr) {
 			++ (*ret_count);
 			*ret_ptr = new_ptr;
-			(*ret_ptr)[(*ret_count) - 1] = (struct tree_node*)malloc(sizeof(struct tree_node*));
-			if ((*ret_ptr)[(*ret_count) - 1]) {
-				(*ret_ptr)[(*ret_count) - 1] = node;
-			} else {
-				--(*ret_count);
-			}
+			(*ret_ptr)[(*ret_count) - 1] = node;
 		}
 	} else if (current_depth < target_depth) {
 		Int32 i;
@@ -439,12 +373,7 @@ Int32 terminative_nodes_private(struct tree_node *node, struct tree_node ***ret_
 		if (new_ptr) {
 			++ *ret_count;
 			*ret_ptr = new_ptr;
-			(*ret_ptr)[(*ret_count) - 1] = (struct tree_node*)malloc(sizeof(struct tree_node*));
-			if ((*ret_ptr)[(*ret_count) - 1]) {
-                (*ret_ptr)[(*ret_count) - 1] = node;
-            } else {
-               --(*ret_count);
-            }
+			(*ret_ptr)[(*ret_count) - 1] = node;
 		}
 		return 1;
 	} else {
