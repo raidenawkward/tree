@@ -24,7 +24,7 @@ int main(int argc, char** argv) {
 	struct Tree *tree;
 	tree_op->create(&tree,TREE_TYPE_NORMAL);
 	tree->node_opera = node_op;
-
+#if 1
 	struct tree_node *n1 = (struct tree_node*)malloc(sizeof(struct tree_node));
 	n1->data = 'a';
 	n1->child_count = 0;
@@ -43,14 +43,14 @@ int main(int argc, char** argv) {
 	struct tree_node *n6 = (struct tree_node*)malloc(sizeof(struct tree_node));
 	n6->data = 'f';
 	n6->child_count = 0;
-
 	tree->root = n1;
 	node_op->append_child(n1,n2);
 	node_op->append_child(n1,n3);
 	node_op->append_child(n2,n4);
 	node_op->append_child(n3,n5);
 	node_op->append_child(n3,n6);
-#if 1
+#endif
+#if 0
 	tree_op->traverse(tree,TREE_TRAVERSE_ROUTE,print_node);
 	tree_op->traverse(tree,TREE_TRAVERSE_ROUTE,print_node);
 #endif

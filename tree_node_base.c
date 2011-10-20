@@ -168,10 +168,10 @@ Int32 treenode_free_nodes (struct tree_node *node) {
 		struct tree_node *child = node->childs[i];
 		ret += treenode_free_nodes(child);
 	}
-	for (i = 0; i < node->child_count; ++i) {
-		free(node->childs[i]);
-	}
+
 	node->child_count = 0;
+	free(node->childs);
+	free(node);
 	return ret;
 }
 
