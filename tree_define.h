@@ -1,17 +1,9 @@
 #ifndef _TREE_DEFINE_H
 #define _TREE_DEFINE_H
 
+#include "cross_define.h"
 #include <stdio.h>
 
-typedef enum {
-	false = 0,
-	true
-} Boolean;
-
-typedef char Char;
-typedef unsigned char UChar;
-typedef unsigned int UInt32;
-typedef int Int32;
 
 typedef enum {
 	TREE_TYPE_NORMAL =0,
